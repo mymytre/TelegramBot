@@ -1,3 +1,3 @@
-web: python main.py
+web: python true_bot.py
 
-worker: python main.py
+worker: python true_bot.py

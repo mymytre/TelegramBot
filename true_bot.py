@@ -3,7 +3,7 @@ from datetime import datetime
 from datetime import time
 
 import requests
-from telegram.ext import Updater
+import telegram.ext
 
 # Enable logging
 logging.basicConfig(
@@ -11,9 +11,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-
-def quote(context):
 
 
 def daily_weather(context):
@@ -45,12 +42,12 @@ def main() -> None:
     """ Bot setup """
     # token and stuff
     my_token = '5258512499:AAGOzdQh75D2jxtA-tO_6K3j7ui9zqvQmVY'
-    updater = Updater(my_token, use_context=True)
+    updater = telegram.ext.Updater(my_token, use_context=True)
     job_queue = updater.job_queue
     dispatcher = updater.dispatcher
 
     # weather and time
-    my_time = time(22, 5)  # must be -1 because geo wont work
+    my_time = time(22, 22)  # must be -1 because geo wont work
     job_queue.run_daily(daily_weather, my_time, days=(0, 1, 2, 3, 4, 5, 6))
 
     # interval version idk
