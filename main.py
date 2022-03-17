@@ -43,7 +43,7 @@ logger = logging.getLogger(__name__)
 # we decided to have it present as context.
 def start(update: Update, context: CallbackContext) -> None:
     """Sends explanation on how to use the bot."""
-    update.message.reply_text('Реп поднял - штаны потерял')
+    update.message.reply_text('Реп поднял - штаны потерял ')
 
 
 def alarm(context: CallbackContext) -> None:
