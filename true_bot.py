@@ -101,8 +101,8 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("weather", request_weather))
 
     # daily weather
-    job_queue.run_daily(daily_weather, time(9, 20),
-                        days=(0, 1, 2, 3, 4, 5, 6))  # time must be UTC, poland -1 ja jeblan
+    job_queue.run_daily(daily_weather, time(14, 4, 30),  # time must be UTC, poland -1 ja jeblan
+                        days=(0, 1, 2, 3, 4, 5, 6))
 
     # interval version idk
     # job_queue.run_repeating(daily_weather, interval=2.0, first=0.0)
