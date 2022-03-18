@@ -16,9 +16,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def daily_weather(context):
-    """" DAILY WEATHER """
-    # API KEY
+def get_weather_from_api():
+    """" GET WEATHER FROM API """
     api_key = "7b8591d0c94f917beca36b15a76c8ad5"
     # krakow location
     lat = "50.05"
@@ -28,8 +27,31 @@ def daily_weather(context):
     final_url = base_url + "lat=" + lat + "&lon=" + lot + '&appid=' + api_key + '&units=metric' + '&lang=ru'
     # api getter
     weather_data = requests.get(final_url).json()
-    # weather
-    out_string = 'ПОГОДА НА СЕГОДНЯ МЕНЧИКИ!!!\n'
+    return weather_data
+
+
+def daily_weather(context):
+    """" PRINT WEATHER"""
+    context.bot.send_message(chat_id='-757860184', text=daily_weather_generator)
+
+
+def daily_weather_generator(user_option) -> str:
+    """
+    Generates weather string, works with string_builder
+    :param user_option: bassically bool
+    if 0 - generates weather for 5 hours with 2 hour interval
+    if 1 - generates weather for 5 hours without interval
+    :return: printable string for rap bot
+    """
+
+    if user_option == 0:
+        out_string = 'ПОГОДА НА СЕГОДНЯ МЕНЧИКИ!!!\n'
+        string_builder(out_string, user_option)
+        return out_string
+
+
+def string_builder(out_string, user_option) -> str:
+    weather_data = get_weather_from_api()
     for i in range(1, 10, 2):
         w_time = weather_data['hourly'][i]['dt']
         w_temp = str(int(weather_data['hourly'][i]['temp']))  # from float to int to string rtd as fck
@@ -37,12 +59,11 @@ def daily_weather(context):
         w_info = weather_data['hourly'][i]['weather'][0]['description']
         out_string += datetime.utcfromtimestamp(w_time).strftime(
             '%H:%M') + " --> " + w_temp + '°, ' + w_info + ', влажность --> ' + w_humidity + '\n'
-
-    context.bot.send_message(chat_id='-757860184', text=out_string)
+    return out_string
 
 
 def based_quote(update: Update, context: CallbackContext) -> None:
-    """ BAZA """
+    """ BASED """
     update.message.reply_text(get_quote())
 
 
@@ -65,11 +86,13 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("quote", based_quote))
 
     # daily weather
-    job_queue.run_daily(daily_weather, time(7, 00), days=(0, 1, 2, 3, 4, 5, 6))  # time must be UTC, poland -1 ja jeblan
+    job_queue.run_daily(daily_weather, time(7, 00),
+                        days=(0, 1, 2, 3, 4, 5, 6))  # time must be UTC, poland -1 ja jeblan
 
     # interval version idk
     # job_queue.run_repeating(daily_weather, interval=2.0, first=0.0)
 
+    # waiting
     updater.start_polling()
     updater.idle()
 
