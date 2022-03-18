@@ -5,6 +5,9 @@ import telegram.ext
 import requests
 
 # Enable logging
+from telegram import Update, ForceReply
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
@@ -36,6 +39,9 @@ def daily_weather(context):
 
     context.bot.send_message(chat_id='-757860184', text=out_string)
 
+def help_command(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /help is issued."""
+    update.message.reply_text('Help!')
 
 def main() -> None:
 
@@ -46,9 +52,12 @@ def main() -> None:
     job_queue = updater.job_queue
     dispatcher = updater.dispatcher
 
+    dispatcher.add_handler(CommandHandler("help", help_command))
+
     # weather and time
     my_time = time(9, 21)  # must be -1 because geo wont work
-    job_queue.run_daily(daily_weather, my_time, days=(0, 1, 2, 3, 4, 5, 6))
+    job_queue.run_daily(daily_weather, time(9, 25), days=(0, 1, 2, 3, 4, 5, 6))
+    job_queue.run_daily(daily_weather, time(9, 30), days=(0, 1, 2, 3, 4, 5, 6))
 
 
     # interval version idk
