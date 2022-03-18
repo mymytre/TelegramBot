@@ -31,8 +31,7 @@ def get_weather_from_api():
 
 
 def daily_weather(context):
-    """" PRINT WEATHER"""
-    context.bot.send_message(chat_id='-757860184', text=daily_weather_generator)
+    context.bot.send_message(chat_id='-757860184', text=daily_weather_generator(0))
 
 
 def daily_weather_generator(user_option) -> str:
@@ -43,16 +42,26 @@ def daily_weather_generator(user_option) -> str:
     if 1 - generates weather for 5 hours without interval
     :return: printable string for rap bot
     """
-
+    out_string = ''
     if user_option == 0:
-        out_string = 'ПОГОДА НА СЕГОДНЯ МЕНЧИКИ!!!\n'
-        string_builder(out_string, user_option)
-        return out_string
+        out_string = 'ПОГОДА НА СЕГОДНЯ МЕНЧИКИ!!!\n' + string_builder(out_string, user_option)
+    elif user_option == 1:
+        out_string = 'ПОГОДА НА 5 ЧАСОВ МЕНЧИКИ!!!\n' + string_builder(out_string, user_option)
+    return out_string
 
 
 def string_builder(out_string, user_option) -> str:
     weather_data = get_weather_from_api()
-    for i in range(1, 10, 2):
+    w_interval = 0
+    w_period = 0
+    if user_option == 0:
+        w_interval = 2
+        w_period = 10
+    elif user_option == 1:
+        w_interval = 1
+        w_period = 6
+
+    for i in range(1, w_period, w_interval):
         w_time = weather_data['hourly'][i]['dt']
         w_temp = str(int(weather_data['hourly'][i]['temp']))  # from float to int to string rtd as fck
         w_humidity = str(weather_data['hourly'][i]['humidity'])
@@ -60,6 +69,10 @@ def string_builder(out_string, user_option) -> str:
         out_string += datetime.utcfromtimestamp(w_time).strftime(
             '%H:%M') + " --> " + w_temp + '°, ' + w_info + ', влажность --> ' + w_humidity + '\n'
     return out_string
+
+
+def request_weather(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(daily_weather_generator(1))
 
 
 def based_quote(update: Update, context: CallbackContext) -> None:
@@ -84,9 +97,11 @@ def main() -> None:
 
     # quotes
     dispatcher.add_handler(CommandHandler("quote", based_quote))
+    # weather request
+    dispatcher.add_handler(CommandHandler("weather", request_weather))
 
     # daily weather
-    job_queue.run_daily(daily_weather, time(7, 00),
+    job_queue.run_daily(daily_weather, time(9, 20),
                         days=(0, 1, 2, 3, 4, 5, 6))  # time must be UTC, poland -1 ja jeblan
 
     # interval version idk
