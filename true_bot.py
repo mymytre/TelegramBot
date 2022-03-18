@@ -15,10 +15,17 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+# gets api from json
+global api_key, my_token, chat_id
+with open("data.json") as file:
+    from_json = json.load(file)
+    my_token = from_json['bot_api']
+    api_key = from_json['weather_api']
+    chat_id = from_json['channel_id']
+
 
 def get_weather_from_api():
     """" GET WEATHER FROM API """
-    api_key = "7b8591d0c94f917beca36b15a76c8ad5"
     # krakow location
     lat = "50.05"
     lot = "19.94"
@@ -31,7 +38,7 @@ def get_weather_from_api():
 
 
 def daily_weather(context):
-    context.bot.send_message(chat_id='-757860184', text=daily_weather_generator(0))
+    context.bot.send_message(chat_id=chat_id, text=daily_weather_generator(0))
 
 
 def daily_weather_generator(user_option) -> str:
@@ -80,7 +87,7 @@ def based_quote(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(get_quote())
 
 
-def rap_or_punl(update: Update, context: CallbackContext) -> None:
+def rap_or_punk(update: Update, context: CallbackContext) -> None:
     """" RAP ?"""
     update.message.reply_text(get_rap())
 
@@ -101,7 +108,6 @@ def get_quote() -> str:
 def main() -> None:
     """ Bot setup """
     # token and stuff
-    my_token = '5258512499:AAGOzdQh75D2jxtA-tO_6K3j7ui9zqvQmVY'
     updater = telegram.ext.Updater(my_token, use_context=True)
     job_queue = updater.job_queue
     dispatcher = updater.dispatcher
@@ -111,7 +117,7 @@ def main() -> None:
     # weather request
     dispatcher.add_handler(CommandHandler("weather", request_weather))
     # rap or punk
-    dispatcher.add_handler(CommandHandler("chto", rap_or_punl))
+    dispatcher.add_handler(CommandHandler("chto", rap_or_punk))
 
     # daily weather
     job_queue.run_daily(daily_weather, time(14, 4, 30),  # time must be UTC, poland -1 ja jeblan
