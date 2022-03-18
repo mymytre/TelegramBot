@@ -1,9 +1,8 @@
 import logging
 from datetime import datetime
 from datetime import time
-
-import requests
 import telegram.ext
+import requests
 
 # Enable logging
 logging.basicConfig(
