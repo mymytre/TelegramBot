@@ -80,6 +80,17 @@ def based_quote(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(get_quote())
 
 
+def rap_or_punl(update: Update, context: CallbackContext) -> None:
+    """" RAP ?"""
+    update.message.reply_text(get_rap())
+
+
+def get_rap() -> str:
+    with open("quotes.json") as file:
+        data = json.load(file)
+        return random.choice(data['rap_or_punk'])
+
+
 def get_quote() -> str:
     """" GET RANDOM QUOTE FROM JSON NAMED quotes.json"""
     with open("quotes.json") as file:
@@ -99,6 +110,8 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("quote", based_quote))
     # weather request
     dispatcher.add_handler(CommandHandler("weather", request_weather))
+    # rap or punk
+    dispatcher.add_handler(CommandHandler("chto", rap_or_punl))
 
     # daily weather
     job_queue.run_daily(daily_weather, time(14, 4, 30),  # time must be UTC, poland -1 ja jeblan
