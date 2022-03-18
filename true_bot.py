@@ -20,7 +20,7 @@ def daily_weather(context):
     # krakow location
     lat = "50.05"
     lot = "19.94"
-    # url assailable
+    # url assemble
     base_url = "https://api.openweathermap.org/data/2.5/onecall?"
     final_url = base_url + "lat=" + lat + "&lon=" + lot + '&appid=' + api_key + '&units=metric' + '&lang=ru'
     # api getter
@@ -39,6 +39,7 @@ def daily_weather(context):
 
 
 def main() -> None:
+
     """ Bot setup """
     # token and stuff
     my_token = '5258512499:AAGOzdQh75D2jxtA-tO_6K3j7ui9zqvQmVY'
@@ -47,8 +48,9 @@ def main() -> None:
     dispatcher = updater.dispatcher
 
     # weather and time
-    my_time = time(22, 22)  # must be -1 because geo wont work
+    my_time = time(8, 20)  # must be -1 because geo wont work
     job_queue.run_daily(daily_weather, my_time, days=(0, 1, 2, 3, 4, 5, 6))
+
 
     # interval version idk
     # job_queue.run_repeating(daily_weather, interval=2.0, first=0.0)
