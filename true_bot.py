@@ -54,7 +54,6 @@ def get_quote() -> str:
 
 
 def main() -> None:
-
     """ Bot setup """
     # token and stuff
     my_token = '5258512499:AAGOzdQh75D2jxtA-tO_6K3j7ui9zqvQmVY'
