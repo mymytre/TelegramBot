@@ -48,7 +48,7 @@ def main() -> None:
     dispatcher = updater.dispatcher
 
     # weather and time
-    my_time = time(8, 20)  # must be -1 because geo wont work
+    my_time = time(8, 35)  # must be -1 because geo wont work
     job_queue.run_daily(daily_weather, my_time, days=(0, 1, 2, 3, 4, 5, 6))
 
 
