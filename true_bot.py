@@ -1,12 +1,13 @@
+import json
 import logging
+import random
 from datetime import datetime
 from datetime import time
-import telegram.ext
-import requests
 
-# Enable logging
-from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+import requests
+import telegram.ext
+from telegram import Update
+from telegram.ext import CallbackContext, CommandHandler
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -39,9 +40,18 @@ def daily_weather(context):
 
     context.bot.send_message(chat_id='-757860184', text=out_string)
 
-def help_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+
+def based_quote(update: Update, context: CallbackContext) -> None:
+    """ BAZA """
+    update.message.reply_text(get_quote())
+
+
+def get_quote() -> str:
+    """" GET RANDOM QUOTE FROM JSON NAMED quotes.json"""
+    with open("quotes.json") as file:
+        data = json.load(file)
+        return random.choice(data['quotes_list'])
+
 
 def main() -> None:
 
@@ -52,13 +62,11 @@ def main() -> None:
     job_queue = updater.job_queue
     dispatcher = updater.dispatcher
 
-    dispatcher.add_handler(CommandHandler("help", help_command))
+    # quotes
+    dispatcher.add_handler(CommandHandler("quote", based_quote))
 
-    # weather and time
-    my_time = time(9, 21)  # must be -1 because geo wont work
-    job_queue.run_daily(daily_weather, time(9, 34), days=(0, 1, 2, 3, 4, 5, 6))
-    job_queue.run_daily(daily_weather, time(9, 37), days=(0, 1, 2, 3, 4, 5, 6))
-
+    # daily weather
+    job_queue.run_daily(daily_weather, time(7, 00), days=(0, 1, 2, 3, 4, 5, 6))  # time must be UTC, poland -1 ja jeblan
 
     # interval version idk
     # job_queue.run_repeating(daily_weather, interval=2.0, first=0.0)
