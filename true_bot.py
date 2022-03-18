@@ -56,8 +56,8 @@ def main() -> None:
 
     # weather and time
     my_time = time(9, 21)  # must be -1 because geo wont work
-    job_queue.run_daily(daily_weather, time(9, 25), days=(0, 1, 2, 3, 4, 5, 6))
-    job_queue.run_daily(daily_weather, time(9, 30), days=(0, 1, 2, 3, 4, 5, 6))
+    job_queue.run_daily(daily_weather, time(9, 34), days=(0, 1, 2, 3, 4, 5, 6))
+    job_queue.run_daily(daily_weather, time(9, 37), days=(0, 1, 2, 3, 4, 5, 6))
 
 
     # interval version idk
