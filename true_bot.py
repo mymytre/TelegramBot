@@ -6,7 +6,7 @@ from datetime import time
 
 import requests
 import telegram.ext
-from telegram import Update
+from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext, CommandHandler
 
 logging.basicConfig(
@@ -92,6 +92,12 @@ def rap_or_punk(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(get_rap())
 
 
+def start_the_rap(update: Update, context: CallbackContext):
+    buttons = [[KeyboardButton("/chto")], [KeyboardButton("/weather")], [KeyboardButton("/quote")]]
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Припусти штаны, дружище!",
+                             reply_markup=ReplyKeyboardMarkup(buttons))
+
+
 def get_rap() -> str:
     with open("quotes.json") as file:
         data = json.load(file)
@@ -111,7 +117,8 @@ def main() -> None:
     updater = telegram.ext.Updater(my_token, use_context=True)
     job_queue = updater.job_queue
     dispatcher = updater.dispatcher
-
+    ###
+    dispatcher.add_handler(CommandHandler("start", start_the_rap))
     # quotes
     dispatcher.add_handler(CommandHandler("quote", based_quote))
     # weather request
