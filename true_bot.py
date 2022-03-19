@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 global api_key, my_token, chat_id
 with open("data.json") as file:
     from_json = json.load(file)
-    my_token = from_json['bot_api']
+    my_token = from_json['test_bot_ip']
     api_key = from_json['weather_api']
     chat_id = from_json['channel_id']
 
@@ -51,7 +51,7 @@ def daily_weather_generator(user_option) -> str:
     """
     out_string = ''
     if user_option == 0:
-        out_string = 'ПОГОДА НА СЕГОДНЯ МЕНЧИКИ!!!\n' + string_builder(out_string, user_option)
+        out_string = 'Доброе утро, сигой подогреешь?\n' + string_builder(out_string, user_option)
     elif user_option == 1:
         out_string = 'ПОГОДА НА 5 ЧАСОВ МЕНЧИКИ!!!\n' + string_builder(out_string, user_option)
     return out_string
@@ -120,7 +120,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("chto", rap_or_punk))
 
     # daily weather
-    job_queue.run_daily(daily_weather, time(14, 4, 30),  # time must be UTC, poland -1 ja jeblan
+    job_queue.run_daily(daily_weather, time(7),  # time must be UTC, poland -1 ja jeblan
                         days=(0, 1, 2, 3, 4, 5, 6))
 
     # interval version idk
